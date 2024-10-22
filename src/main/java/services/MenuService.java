@@ -49,12 +49,17 @@ public class MenuService {
             try {
                 showCurrencyOptions(message);
                 selectedOption = Integer.parseInt(scanner.nextLine());
-                System.out.println("You Selected The Currency: " + currenciesDescriptions.get(selectedOption - 1) + "\n");
 
-                if(selectedOption > CurrencyCodesEnum.getAllDescriptions().size()) {
+                if(selectedOption > CurrencyCodesEnum.getAllDescriptions().size() || selectedOption < 0) {
                     System.out.println("\nInsert only the number of an available option\n");
                     selectedOption = -1;
                 }
+
+                if(selectedOption == 0) {
+                    throw new FinishedByUserException();
+                }
+
+                System.out.println("You Selected The Currency: " + currenciesDescriptions.get(selectedOption - 1) + "\n");
             } catch (NumberFormatException e) {
                 System.out.println("\nInsert only the number of an available option\n");
             }
@@ -67,13 +72,18 @@ public class MenuService {
         return selectedOption;
     }
 
-    private double getValueToExchange() {
+    private double getValueToExchange() throws FinishedByUserException {
         Scanner scanner = new Scanner(System.in);
         double value;
         while (true) {
             System.out.println("Insert The Value To Be Exchanged");
             try {
                 value = Double.parseDouble(scanner.nextLine());
+
+                if(value == 0) {
+                    throw new FinishedByUserException();
+                }
+
                 break;
             } catch (NumberFormatException e) {
                 System.out.println("Insert the Value To Be Exchanged With The Format 0.00\n");
